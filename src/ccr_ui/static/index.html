@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCR 配置面板</title>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <h1>CCR 配置面板</h1>
+      <span id="conn-status" class="badge">未连接</span>
+    </header>
+
+    <!-- 访问口令登录卡片 -->
+    <section id="login-card" class="card">
+      <h2>访问口令</h2>
+      <p class="muted small">请输入访问口令（即 CCR web token，位于 <code>~/.claude-code-router/service.json</code> 的 <code>url</code> 参数，或直接打开带 <code>?t=</code> 的链接）。</p>
+      <div class="row">
+        <input id="login-token" type="password" placeholder="粘贴访问口令" style="flex:1;max-width:380px">
+        <button id="login-btn" class="btn primary">进入</button>
+      </div>
+      <p id="login-error" class="error hidden"></p>
+    </section>
+
+    <!-- 主面板 -->
+    <main id="main" class="hidden">
+      <!-- 模型选择 -->
+      <section class="card">
+        <h2>模型选择</h2>
+        <p class="muted small">默认 Provider：<b id="cur-provider"></b></p>
+        <div class="row">
+          <select id="model-select" style="flex:1;max-width:420px"></select>
+          <button id="switch-btn" class="btn primary">切换模型</button>
+        </div>
+        <p class="muted small" id="current-model-line"></p>
+      </section>
+
+      <!-- Provider 管理 -->
+      <section class="card">
+        <h2>Provider 管理</h2>
+        <table id="provider-table">
+          <thead>
+            <tr><th>名称</th><th>类型</th><th>Base URL</th><th>模型</th><th>API Key</th><th>操作</th></tr>
+          </thead>
+          <tbody id="provider-tbody"></tbody>
+        </table>
+      </section>
+
+      <!-- 新增 Provider -->
+      <section class="card">
+        <h2>新增 Provider</h2>
+        <div class="grid">
+          <label>名称<input id="p-name" placeholder="如 kimi"></label>
+          <label>类型
+            <select id="p-type">
+              <option value="">自动推断</option>
+              <option value="anthropic_messages">anthropic_messages</option>
+              <option value="openai_chat_completions">openai_chat_completions</option>
+            </select>
+          </label>
+          <label class="span2">Base URL（Anthropic 协议以 /anthropic 结尾，OpenAI 协议以 /v1 结尾）
+            <input id="p-baseurl" placeholder="https://api.xxx.com/anthropic"></label>
+          <label class="span2">模型（逗号分隔）<input id="p-models" placeholder="model-a, model-b"></label>
+          <label class="span2">API Key<input id="p-apikey" type="password" placeholder="sk-..."></label>
+        </div>
+        <div class="row">
+          <button id="add-btn" class="btn primary">添加 Provider</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 编辑弹窗 -->
+  <div id="edit-modal" class="modal hidden">
+    <div class="modal-box card">
+      <h2>编辑 Provider <span id="edit-name-label"></span></h2>
+      <div class="grid">
+        <label>名称<input id="e-name"></label>
+        <label>类型
+          <select id="e-type">
+            <option value="anthropic_messages">anthropic_messages</option>
+            <option value="openai_chat_completions">openai_chat_completions</option>
+          </select>
+        </label>
+        <label class="span2">Base URL<input id="e-baseurl"></label>
+        <label class="span2">模型（逗号分隔）<input id="e-models"></label>
+        <label class="span2">API Key<input id="e-apikey" type="password" placeholder="留空则不修改"></label>
+      </div>
+      <div class="row right">
+        <button id="edit-cancel" class="btn">取消</button>
+        <button id="edit-save" class="btn primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>
