@@ -75,3 +75,8 @@ tests/
   unit/                 # fake RPC 驱动 client；mock client + 真实 HTTP server
   integration/          # stub CCR RPC 全链路
 ```
+
+## 文档
+
+- [docs/使用指南.md](docs/使用指南.md) —— 面向最终用户的使用指南：启动、获取口令 `t`、访问方式、UI 操作、FAQ
+- [docs/CCR-API操作手册.md](docs/CCR-API操作手册.md) —— CCR v3 底层 RPC / 端口 / 命令行操作参考
