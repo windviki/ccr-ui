@@ -8,6 +8,7 @@
 """
 
 import argparse
+import logging
 import os
 import sys
 from pathlib import Path
@@ -46,6 +47,7 @@ def parse_args(argv=None) -> argparse.Namespace:
 
 def main(argv=None) -> int:
     sys.stdout.reconfigure(line_buffering=True)  # 启动信息即时输出到日志
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
     args = parse_args(argv)
     token = args.token or load_service_token()
     auth = AuthConfig(enabled=not args.no_auth, token=token)

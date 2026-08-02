@@ -225,8 +225,7 @@ class CcrUIHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def log_message(self, fmt: str, *args) -> None:  # noqa: A002
-        # 静默访问日志，仅错误通过 logger.exception 输出
-        return
+        logger.info("REQ %s -> %s", self.requestline, fmt % args)
 
 
 def create_server(
