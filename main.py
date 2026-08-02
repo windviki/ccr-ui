@@ -45,6 +45,7 @@ def parse_args(argv=None) -> argparse.Namespace:
 
 
 def main(argv=None) -> int:
+    sys.stdout.reconfigure(line_buffering=True)  # 启动信息即时输出到日志
     args = parse_args(argv)
     token = args.token or load_service_token()
     auth = AuthConfig(enabled=not args.no_auth, token=token)
