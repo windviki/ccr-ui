@@ -56,11 +56,14 @@ class StubCCRHandler(BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length") or 0)
         body = json.loads(self.rfile.read(length).decode("utf-8"))
         method = body.get("method")
-        params = body.get("params") or []
+        # 与真实 CCR 一致：RPC 参数字段是 `args` 而非 `params`
+        args = body.get("args") or []
         if method == "getConfig":
             payload = {"ok": True, "value": deepcopy(type(self).config)}
         elif method == "saveConfig":
-            type(self).config = deepcopy(params[0])
+            if not args:
+                raise RuntimeError("saveConfig 缺少 args 参数（协议字段应为 args）")
+            type(self).config = deepcopy(args[0])
             payload = {"ok": True, "value": deepcopy(type(self).config)}
         else:
             payload = {"ok": False, "error": {"message": f"unknown method {method}"}}

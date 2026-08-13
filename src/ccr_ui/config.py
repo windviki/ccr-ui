@@ -53,7 +53,9 @@ def make_rpc_callable(
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
     def rpc(method: str, params: list) -> Any:
-        body = json.dumps({"method": method, "params": params}).encode("utf-8")
+        # CCR v3 的 RPC 请求参数字段为 `args`（getConfig/saveConfig 均如此），
+        # 之前误用 `params` 导致 saveConfig 收不到配置参数、访问 proxy 崩溃。
+        body = json.dumps({"method": method, "args": params}).encode("utf-8")
         req = urllib.request.Request(
             rpc_url,
             data=body,
