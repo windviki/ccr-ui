@@ -2,6 +2,9 @@
 name = "ccr-ui"
 version = "0.1.0"
 description = "轻量级 Claude Code Router (CCR) 可视化配置前端（模型选择 / Provider 增删改）"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "viki", email = "windviki@gmail.com" }]
 requires-python = ">=3.11"
 dependencies = []
 
