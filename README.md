@@ -16,7 +16,7 @@ Claude Code Router (CCR) v3 的轻量可视化配置前端，替代无法访问�
 ## 快速开始
 
 ```bash
-cd /home/user/new-ccr-ui
+cd ccr-ui
 uv sync                       # 安装依赖（仅 pytest）
 uv run python main.py         # 默认 127.0.0.1:24678，自动读取 CCR web token 作为访问口令
 ```
@@ -28,6 +28,9 @@ uv run python main.py         # 默认 127.0.0.1:24678，自动读取 CCR web to
 ```
 https://code.example.com/proxy/24678/?t=<访问口令>
 ```
+
+> `code.example.com` 为占位域名，请替换为你的 code-server 基址，或通过 `.env` 的
+> `CODE_SERVER_BASE_URL` 配置，让启动日志直接打印正确链接。
 
 口令即 `~/.claude-code-router/service.json` 中 `url` 参数里的 `ccr_web_token`。
 前端会将口令存入 sessionStorage 并从 URL 中清除。
@@ -48,6 +51,23 @@ uv run python main.py --no-auth
 | `--token` | 覆盖访问口令 | 自动读 service.json |
 | `--ccr-base` | CCR RPC 地址 | `http://127.0.0.1:3458/api/ccr/rpc` |
 
+## 配置
+
+所有命令行参数均有对应环境变量，可写入 `.env`（复制 `.env.example` 后修改，已被 `.gitignore` 忽略）。
+优先级：**命令行参数 > 环境变量 / `.env` > 默认值**。
+
+| 环境变量 | 对应参数 | 默认 |
+|---|---|---|
+| `CCR_UI_HOST` | `--host` | `127.0.0.1` |
+| `CCR_UI_PORT` | `--port` | `24678` |
+| `CCR_RPC_URL` | `--ccr-base` | `http://127.0.0.1:3458/api/ccr/rpc` |
+| `CCR_SERVICE_FILE` | — | `~/.claude-code-router/service.json` |
+| `CCR_UI_TOKEN` | `--token` | 自动读取 `service.json` |
+| `CODE_SERVER_BASE_URL` | — | 无（不打印代理链接） |
+
+访问口令与 CCR RPC 鉴权复用同一个 CCR web token（`x-ccr-web-auth` 请求头），
+token 由 `CCR_SERVICE_FILE` 指向的 `service.json` 自动读取，也可用 `CCR_UI_TOKEN` 固定覆盖。
+
 ## 安全说明
 
 - 服务默认监听 `127.0.0.1`，经 code-server 代理方可从外部访问；code-server 之外端口未暴露。
@@ -67,7 +87,7 @@ uv run pytest                 # 全部测试（单元 + 集成，集成用 stub 
 ```
 main.py                 # 入口
 src/ccr_ui/
-  config.py             # token 读取 / RPC 客户端 / AuthConfig
+  config.py             # .env 加载 / Settings / token 读取 / RPC 调用 / AuthConfig
   ccr_client.py         # CCR 配置领域操作（依赖注入，可单测）
   server.py             # HTTP 服务：静态文件 + /api/* + 鉴权
   static/               # 前端单页（index.html / app.js / style.css）

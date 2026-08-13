@@ -17,8 +17,8 @@ CCR v3 运行后有三个本地 HTTP 服务：
 
 **配置存储（重要）**：CCR v3 的配置**持久化在 SQLite**：
 
-- `/home/user/.claude-code-router/config.sqlite` → 表 `app_config`，存主配置（Providers、profile、Router 等）
-- `/home/user/.claude-code-router/app-data/api-keys.sqlite` → 表 `api_keys`，存 CCR 网关自签密钥
+- `~/.claude-code-router/config.sqlite` → 表 `app_config`，存主配置（Providers、profile、Router 等）
+- `~/.claude-code-router/app-data/api-keys.sqlite` → 表 `api_keys`，存 CCR 网关自签密钥
 
 磁盘上的 `config.json`（v2 遗留格式）**不是 v3 运行时的配置源**，修改它不生效、也不会被运行时读取（只要 `config.sqlite` 存在）。改配置请走 RPC API 或 sqlite，**不要手动改 `config.json`**。
 
@@ -28,10 +28,10 @@ CCR v3 运行后有三个本地 HTTP 服务：
 
 ### 2.1 CCR Web Token（操作 3458 RPC 用）
 
-存在 `/home/user/.claude-code-router/service.json` 的 `url` 参数中：
+存在 `~/.claude-code-router/service.json` 的 `url` 参数中：
 
 ```bash
-WEB_TOKEN=$(python3 -c "import json;print(json.load(open('/home/user/.claude-code-router/service.json'))['url'].split('ccr_web_token=')[1])")
+WEB_TOKEN=$(python3 -c "import json,os;print(json.load(open(os.path.expanduser('~/.claude-code-router/service.json')))['url'].split('ccr_web_token=')[1])")
 ```
 
 请求时放入请求头 `x-ccr-web-auth`：
@@ -45,10 +45,10 @@ curl -s -X POST http://127.0.0.1:3458/api/ccr/rpc \
 
 ### 2.2 Gateway Token（操作 3457 底层 API 用）
 
-存在 `/home/user/.claude-code-router/gateway.config.json` 的 `auth.staticApiKeys.keys[0]`：
+存在 `~/.claude-code-router/gateway.config.json` 的 `auth.staticApiKeys.keys[0]`：
 
 ```bash
-GW_TOKEN=$(python3 -c "import json;print(json.load(open('/home/user/.claude-code-router/gateway.config.json'))['auth']['staticApiKeys']['keys'][0])")
+GW_TOKEN=$(python3 -c "import json,os;print(json.load(open(os.path.expanduser('~/.claude-code-router/gateway.config.json')))['auth']['staticApiKeys']['keys'][0])")
 ```
 
 请求时放入请求头 `x-ccr-core-auth`：
@@ -85,7 +85,7 @@ RPC 端点：`POST http://127.0.0.1:3458/api/ccr/rpc`
 python3 << 'PYEOF'
 import json, urllib.request
 
-WEB_TOKEN = "<REDACTED>"  # 建议改用 2.1 节的自动读取
+WEB_TOKEN = "<你的 ccr_web_token>"  # 请用 2.1 节的命令自动读取，切勿把真实 token 提交到仓库
 NEW_MODEL  = "deepseek-v4-flash"
 
 def rpc(method, args=None):
@@ -132,8 +132,8 @@ curl -s -X POST http://127.0.0.1:3458/api/ccr/rpc \
 
 # ② 持久化 sqlite
 python3 -c "
-import sqlite3, json
-db = sqlite3.connect('/home/user/.claude-code-router/config.sqlite')
+import sqlite3, json, os
+db = sqlite3.connect(os.path.expanduser('~/.claude-code-router/config.sqlite'))
 row = db.execute(\"SELECT value_json FROM app_config WHERE key='default'\").fetchone()
 cfg = json.loads(row[0])
 print([p['model'] for p in cfg['profile']['profiles'] if p.get('agent')=='claude-code'])"
@@ -186,7 +186,7 @@ grep -E "ANTHROPIC_MODEL|CCR_CLAUDE_CODE_MODEL" ~/.claude/settings.json
 python3 << 'PYEOF'
 import json, urllib.request
 
-WEB_TOKEN = "<REDACTED>"  # 建议改用 2.1 节的自动读取
+WEB_TOKEN = "<你的 ccr_web_token>"  # 请用 2.1 节的命令自动读取，切勿把真实 token 提交到仓库
 
 def rpc(method, args=None):
     req = urllib.request.Request(
@@ -286,8 +286,8 @@ curl -s -X POST -H "x-ccr-core-auth: $GW_TOKEN" -H "Content-Type: application/js
 
 ```bash
 # Token 读取
-WEB_TOKEN=$(python3 -c "import json;print(json.load(open('/home/user/.claude-code-router/service.json'))['url'].split('ccr_web_token=')[1])")
-GW_TOKEN=$(python3 -c "import json;print(json.load(open('/home/user/.claude-code-router/gateway.config.json'))['auth']['staticApiKeys']['keys'][0])")
+WEB_TOKEN=$(python3 -c "import json,os;print(json.load(open(os.path.expanduser('~/.claude-code-router/service.json')))['url'].split('ccr_web_token=')[1])")
+GW_TOKEN=$(python3 -c "import json,os;print(json.load(open(os.path.expanduser('~/.claude-code-router/gateway.config.json')))['auth']['staticApiKeys']['keys'][0])")
 
 # 读配置
 curl -s -X POST http://127.0.0.1:3458/api/ccr/rpc \

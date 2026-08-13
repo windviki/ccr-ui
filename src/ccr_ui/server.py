@@ -17,6 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
+from ccr_ui import __version__
 from ccr_ui.ccr_client import CcrClient, CcrError, NotFoundError
 from ccr_ui.config import AuthConfig
 
@@ -43,7 +44,7 @@ class CcrUIHandler(BaseHTTPRequestHandler):
     client: CcrClient
     auth: AuthConfig
     static_dir: Path
-    server_version = "ccr-ui/0.1"
+    server_version = f"ccr-ui/{__version__}"
 
     # ---------------- HTTP 方法入口 ----------------
 
