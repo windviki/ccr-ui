@@ -8,6 +8,9 @@ authors = [{ name = "viki", email = "windviki@gmail.com" }]
 requires-python = ">=3.11"
 dependencies = []
 
+[project.urls]
+repository = "https://github.com/windviki/ccr-ui"
+
 [tool.uv]
 package = false
 
