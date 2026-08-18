@@ -1,6 +1,6 @@
 # ccr-ui
 
-Claude Code Router (CCR) v3 的轻量可视化配置前端，替代无法访问的 CCR 自带 Web UI。
+面向 code-server 集成 CCR（Claude Code Router）v3 的轻量替代 UI —— 可视化配置前端，在 CCR 自带 Web UI 无法访问时替代使用。
 
 > English version: [README.md](README.md)
 
@@ -11,7 +11,7 @@ Claude Code Router (CCR) v3 的轻量可视化配置前端，替代无法访问�
 
 我们在自部署的 VS Code Server web 页面里安装 CCR，以便正常使用 Claude Code 等 CLI。
 但 CCR 自带 Web UI 由于端口转发 / 代理等限制，无法在 web 环境下打开去修改配置。
-为此做了这个能在 VS Code Server web 页面下正常打开、完成基础配置（切换模型、增删改 Provider）的 UI 界面。
+为此做了这个面向 code-server 集成 CCR 的替代 UI，能在 VS Code Server web 页面下正常打开、完成基础配置（切换模型、增删改 Provider）。
 
 ## 功能
 

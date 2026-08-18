@@ -1,6 +1,6 @@
 # ccr-ui
 
-A lightweight visual configuration frontend for Claude Code Router (CCR) v3 — a stand-in for CCR's built-in Web UI when it can't be reached.
+A lightweight alternative UI for code-server-integrated Claude Code Router (CCR) v3 — a visual configuration frontend that stands in for CCR's built-in Web UI when it can't be reached.
 
 > 中文说明见 [README.zh_CN.md](README.zh_CN.md)。
 
@@ -11,8 +11,9 @@ offering **model switching, provider CRUD, and default-provider switching**.
 
 We self-host a VS Code Server and run Claude Code (and other CLI tools) inside its web page via Claude Code Router (CCR).
 However, CCR's built-in Web UI cannot be opened from the browser due to port-forwarding / proxy limitations in that
-environment. This project is a lightweight web UI that opens correctly inside the VS Code Server web page, so you can
-finish basic configuration (switch models, add / edit / remove providers) without leaving the browser.
+environment. This project is the alternative UI for code-server-integrated CCR: a lightweight web UI that opens correctly
+inside the VS Code Server web page, so you can finish basic configuration (switch models, add / edit / remove providers)
+without leaving the browser.
 
 ## Features
 
